@@ -1,0 +1,96 @@
+#include <stdio.h>
+#include <string.h>
+
+//void PrintPlural(char noun [])
+//{
+ //for(int i = 0; i<=strlen(noun - 1); i++)
+
+ //{
+
+ //printf("%c", noun[i]);
+
+  //}
+//}
+
+void Plural( char noun [])
+
+{
+
+if(noun[strlen(noun - 1)] == 's' || (noun[strlen(noun - 2)] == 'c' && noun[strlen(noun - 1 )] == 'h') || (noun[strlen(noun - 2 )] == 's' && noun[strlen(noun - 1 )] == 'h') )
+{
+
+ strcat(noun, "es");
+
+ printf("%s", noun);
+ //PrintPlural(noun);
+}
+
+else if(noun[strlen(noun - 1)] == 'y')
+
+{
+
+ noun[strlen(noun - 1)] = 'i';
+
+ strcat(noun, "es");
+
+
+ printf("%s", noun);
+ //PrintPlural(noun);
+}
+
+else
+{
+ strcat(noun, "s");
+
+
+ printf("%s", noun);
+ //PrintPlural(noun);
+
+}
+
+}
+
+int main(void) {
+char noun[29] ;
+
+printf("enter a noun\n");
+scanf("%s", noun);
+
+if(strlen(noun - 1) > 25 )
+{
+
+ printf("Oops!, you've entered more than 25 characters, Please try again:");
+ scanf("%s\n", noun);
+
+}
+
+//PrintPlural(noun);
+
+Plural(noun);
+
+ return 0;
+}
+/*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*/

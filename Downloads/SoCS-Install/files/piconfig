@@ -1,0 +1,88 @@
+#!/usr/bin/python
+import smbpasswd
+import sys
+import getpass
+import os.path
+import pexpect
+import ldap
+import ldif
+
+failure_max = 5
+failures = 0
+
+def enter_wrapper():
+    while 1:
+        try:
+            check_ldap()
+	    break
+        except ldap.INVALID_CREDENTIALS:
+            invalid_pass()
+        except ldap.NO_SUCH_OBJECT:
+            invalid_pass()
+        except ldap.INAPPROPRIATE_AUTH:
+            invalid_pass()
+        except ldap.INVALID_DN_SYNTAX:
+            invalid_pass()
+        except ldap.SERVER_DOWN:
+            cant_connect()
+        except ldap.TIMEOUT:
+            cant_connect()
+        except ldap.BUSY:
+            cant_connect()
+        except ldap.CONNECT_ERROR:
+            cant_connect()
+        except ldap.LDAPError:
+            invalid_pass()
+
+def check_ldap():
+
+    userid = raw_input("Username: ")
+    pw = getpass.getpass()
+
+    ld = ldap.initialize('ldap://directory.uoguelph.ca')
+    #TLS required for LDAP Connection
+    #ld.set_option(ldap.OPT_X_TLS,ldap.OPT_X_TLS_DEMAND)
+    #ld.start_tls_s()
+    ld.simple_bind_s()
+    dn = "uid=" + userid + ",ou=People,o=uoguelph.ca"
+    ld.simple_bind_s(dn, pw)
+    result_set = []
+    result_id = ld.search("ou=People,o=uoguelph.ca", ldap.SCOPE_SUBTREE, "(uid="+userid+")", None)
+    while 1:
+            result_type, result_data = ld.result(result_id, 0)
+            if (result_data == []):
+                break
+            else:
+                if result_type == ldap.RES_SEARCH_ENTRY:
+                    result_set.append(result_data)
+    if len(result_set) == 0:
+            print "No Results."
+            return
+    for i in range(len(result_set)):
+        for entry in result_set[i]:
+            name = entry[1]['cn'][0]
+            userid = entry[1]['uid'][0]
+            usermail = entry[1]['mail'][0]
+    ld.unbind_s()
+
+    configure_git(userid, name, usermail)
+
+
+def invalid_pass():
+    global failures
+    failures += 1
+    if failures >= failure_max:
+        raise SystemExit('Unauthorized login attempt')
+    else:
+        print('Invalid Login. Attempt %i/%i' % (failures, failure_max))
+
+def cant_connect():
+    global attempts
+    print('Failed to connect to the authentication server')
+
+def configure_git(userid, name, mail):
+    os.system("git config --global user.name " + name)
+    os.system("git config --global user.email " + mail)
+    #os.system("git config --global user.email " + userid + "@mail.uoguelph.ca")
+
+enter_wrapper()

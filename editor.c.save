@@ -1,0 +1,273 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+//calls other 2 functions and change function to int
+void replaceInString(char original[] , char substring[], char replace[])
+
+{
+
+char toFind[strlen(substring)];
+
+for(int i = 0; i< strlen(toFind); i ++)
+
+{
+
+//puts substring into tofind array
+toFind[i] = substring[i];
+
+}
+
+
+printf("\nTEST tofind is %s\n", toFind);
+
+findSubString(original, toFind);//include variable to hold it
+
+//function 3
+insertString(original, start, length, replace);//include variable to hold it
+
+//return 0;
+
+}
+
+
+
+
+
+
+
+
+
+
+//searches for index of of toFind
+findSubString(char original[], char toFind[])
+
+{
+
+int length = strlen(toFind);
+
+int start = 0;
+
+int  flag = 0;
+
+
+
+//finds the substring in original
+for(int i = 0; i <  length; i++)
+{
+
+    for(int j = 0; j<strlen(original); j++)
+    {
+       printf("potential: %c|%c\n", toFind[i], original[j]);
+        if(toFind[i] == original[j])
+        {
+            flag = 1;
+            start = j;
+            for(int k = 1; k<length; k++)
+            {
+            	if(k == length)
+            	{
+            		break;
+            	}
+
+   		        printf("%c|%c\n", toFind[k], original[k+start]);
+                if(toFind[k] == original[k+start])
+                {
+                    continue;
+                }
+                else
+                {
+                    flag = 0;
+                    break;
+                }
+
+
+            }
+        }
+
+        if(flag == 1)
+
+        {
+
+        break;
+
+        }
+    }
+
+    if(flag == 1)
+
+    {
+
+    break;
+
+    }
+
+
+}
+
+
+
+if(flag == 1)
+
+{
+
+return start;
+
+
+
+}
+
+else
+
+{
+
+return -1;
+
+
+}
+
+
+
+}
+
+
+
+
+
+void insertString(char original[], int start, int length, char toInsert[])
+{
+
+int frontRemain = 0;
+char frontArray[60]; 
+char endArray[60];
+int store = 0;
+
+for(int x = 0; x<3;/* start  */ x++)
+
+{
+
+frontRemain++;
+
+}
+
+for(int i = 0; i<frontRemain; i++)
+{
+
+
+frontArray[i] = original[i]
+store++;
+
+}
+
+frontArray[store] = '\0';
+
+
+for(int k = length; k<strlen(original); k++)
+{
+
+endRemain++;
+
+
+}
+
+
+for(int u = length; u<strlen(original); u++)
+
+{
+
+endArray[u] = original[u];
+store++;
+
+}
+
+endArray[store] = '\0';
+
+char firstHalf[] = strcat(frontArray, toInsert);
+char final[]= strcat(firstHalf,endArray);// endarray?
+
+printf("Replace string %s:", final);
+
+
+
+}
+
+
+
+
+int main(void)
+
+{
+
+int num =0;
+//char input= ' ';
+char user = ' ';
+char substring[80]= "tina"; //change length of array
+char original[80] = "martinajohn";
+char replace[80]= "ball";
+
+
+/*
+printf("please  choose a line to edit: 1,2,3,4 or 5, press \'q\' to exit\n");
+scanf("%d", &num); // do ifgets
+
+switch(num)
+
+{
+
+case 1:
+
+printf("press r to remove the whole line\n");
+scanf("%c", &user);
+
+if(user == 'r' || user == 'R');
+
+  {
+    for(int i = 0; i <strlen(original); i++)
+
+       {
+
+        original[i] = " ";
+
+        }
+  }
+//printf("Test: String %s\n", original);
+
+
+printf("press \'s\' to insert or delete a substring in line\n");
+scanf("%c", &user);
+
+     if(user == 's' || user == 'S')
+
+     {
+               printf("enter in substring you want to remove\n");
+               scanf("%s", substring); //change length of array and change to fgets
+               printf("TEST OF SUBSTRING %s\n", substring);
+               printf("Enter in word you will like to replace\n");
+               scanf("%s", replace); // change to fgets
+               replaceInString(original, substring, replace);// calls first function 
+
+
+
+
+
+     }
+
+
+
+
+
+break;
+
+}
+
+*/
+num = findSubString(original, substring);// FIX calls second function from here also... deletea!!!
+
+printf("%d", num);
+
+//insertString(original, num, length, replace);//include variable to hold it
+
+
+return 0;
+}

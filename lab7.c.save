@@ -1,0 +1,59 @@
+#include  <stdio.h>
+
+int main (void)
+
+{
+
+double averNum;
+averNum = 0.0;
+
+void CalcGradeSys(double averNum)
+
+{
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+return 0;
+
+}

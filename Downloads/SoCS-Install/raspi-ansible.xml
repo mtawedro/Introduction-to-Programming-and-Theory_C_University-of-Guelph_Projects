@@ -1,0 +1,94 @@
+- hosts: all
+  sudo: yes
+  connection: local
+  tasks:
+
+    #Create 1500 and 2500 folders in Documents 
+    - name: Create 1500 Folder
+      file: path=/home/pi/cis1500 owner=pi group=pi mode=0700 state=directory
+    - file: path=/home/pi/cis2500 owner=pi group=pi mode=0700 state=directory
+
+    # Set Up Aptitude Repos
+    - file: path=/etc/apt/sources.list state=absent
+    - copy: src=files/ox.list dest=/etc/apt/sources.list.d/ox.list
+    - apt: update_cache=yes
+
+    # Install Software
+    - apt: name=git state=present
+    - apt: name=nano state=present
+    - apt: name=vim state=present
+    - apt: name=valgrind state=present
+    - apt: name=nethack-console state=present
+    - apt: name=gcc state=present # ASK JUSTIN FOR VERSION
+    - apt: name=gdb state=present
+    - apt: name=libncurses5-dev state=present
+    - apt: name=libcurl4-openssl-dev state=present
+    - apt: name=cppcheck state=present
+    - apt: name=tar state=present
+    - apt: name=gzip state=present
+    - apt: name=firefox-esr state=present
+    - apt: name=python-pip state=present
+    - apt: name=network-manager state=present
+    - apt: name=network-manager-gnome state=present
+
+    # Install Dependencies for OwnCloud
+    - apt: name=libc6 state=present
+    - apt: name=libgcc1 state=present
+    - apt: name=libqt4-network state=present
+    - apt: name=libqt4-test state=present
+    - apt: name=libqt4-xml state=present
+    - apt: name=libqtcore4 state=present
+    - apt: name=libqtgui4 state=present
+    - apt: name=libqtkeychain0 state=present
+    - apt: name=libstdc++6 state=present
+    - apt: name=libqt4-xmlpatterns state=present
+    - apt: name=libqtwebkit4 state=present
+    - apt: name=libqt4-sql-sqlite state=present
+
+    # Install Owncloud Client
+    - apt: deb=files/owncloud-client.deb
+
+    #Start Owncloud automatically at boot
+    - lineinfile: dest=/etc/xdg/lxsession/LXDE/autostart state=present line=@owncloud
+
+    # Install Python Libraries for GPIO
+    - apt: name=python-dev state=present
+    - apt: name=python-rpi.gpio state=present
+
+    # Install CPPLink (Script from Google)
+    - copy: src=files/styleCheck dest=/usr/local/bin/styleCheck mode=0755
+    - copy: src=files/cpplint.py dest=/usr/local/bin/cpplint.py mode=0644
+
+    # Install nano.rc file as well as customized syntax colours
+    - copy: src=files/.nanorc dest=/home/pi/.nanorc owner=pi group=pi mode=0644
+    - copy: src=files/c.nanorc dest=/usr/share/nano/c.nanorc owner=root group=root mode=0644
+    - copy: src=files/python.nanorc dest=/usr/share/nano/python.nanorc owner=root group=root mode=0644
+    - copy: src=files/makefile.nanorc dest=/usr/share/nano/makefile.nanorc owner=root group=root mode=0644
+    - copy: src=files/sh.nanorc dest=/usr/share/nano/sh.nanorc owner=root group=root mode=0644
+
+    # Install piconfig file
+    - copy: src=files/piconfig dest=/usr/local/bin owner=root group=root mode=755
+
+    # Intall dependencies for piconfig
+    - apt: name=libldap2-dev state=present
+    - apt: name=libsasl2-dev state=present
+    - apt: name=libssl-dev state=present
+    - pip: name=python-ldap
+    - pip: name=pexpect
+    - pip: name=smbpasswd
+
+    # Desktop Shortcuts to cis folders in home directory
+    - file: src=/home/pi/cis1500 dest=/home/pi/Desktop/cis1500 state=link
+    - file: src=/home/pi/cis2500 dest=/home/pi/Desktop/cis2500 state=link
+
+    # Copy Network Interfaces files so wifi is managed by network-manager
+    - copy: src=files/interfaces dest=/etc/network/interfaces owner=root group=root mode=0644
+    - copy: src=files/panel dest=/home/pi/.config/lxpanel/LXDE-pi/panels/panel owner=pi group=pi mode=0644
+
+    # Download and install Minecraft
+    - get_url: url=https://s3.amazonaws.com/assets.minecraft.net/pi/minecraft-pi-0.1.1.tar.gz dest=/home/pi
+    - unarchive: src=/home/pi/minecraft-pi-0.1.1.tar.gz dest=/home/pi copy=no
+    - file: path=/home/pi/minecraft-pi-0.1.1.tar.gz state=absent
+
+    # Disable SSH server from starting automatically
+    - service: name=ssh state=stopped enabled=no

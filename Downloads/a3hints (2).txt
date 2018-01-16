@@ -1,0 +1,91 @@
+*****************************
+Assignment Three Hints
+*****************************
+
+Main Algorithm 
+
+1. Initialize editing buffer with 5 lines of text
+2. Ask the user if the user wishes to edit or quit
+	2.b if quit, display buffer and exit program
+3.Edit
+   Ask the user to select a line to edit
+   Ask the user which operation
+        1. replace entire line
+        2. replace a substring
+4. Display results of edit and offer to edit again
+
+
+Refinement for 3.2 replace a substring
+	3.2.1 Ask user to provde substring to be replaced
+	3.2.2 Find substring in line being edited
+	3.2.3 If substring exists, compose new line and copy into line being edited.
+
+
+Refinement for 3.2.2 find substring 
+
+	terms:  needle is the string being found, 
+		    haystack is the line of text being searched
+
+***
+possible algorithm one
+***
+	for each (i) character in needle (use strlen(needle))
+	    for each (j) character in haystack (use strlen haystack)
+	         if needle[i] is the same character as haystack[j]
+	         	 set a flag to indicate a potential match
+	         	 set the potential substring position to j
+	             for (k) the remaining characters in needle
+	                  compare needle[i+k] to haystack[j+k]
+	                  if they are the same move to next character
+	                  if they are different change the matching flag to false
+	if the matching flag is true, return the matching position, else return -1.
+
+***
+possible algorithm two
+***
+
+for each (i) character in haystack (use strlen haystack)
+    initialize counter to the start of needle
+    
+    if (needle[i] == haystack[j])
+        set a flag to indicate a potential match
+        set the potential substring to position i
+
+        loop the remaining characters in needle[i] and compare to haystack[j]
+        
+        if the end of needle is reached, return potential substring position
+        if not reached change the match flag to false and reinitialize your needle counter
+
+
+if it gets here, no match happened and can return -1
+
+
+Hints for 3.2.3 compose new line
+	use an additional string array to build the new string
+	when you are copying in character by character, remember to add a '\0' as the last character in the string array.
+	if you use strcat and strcpy,  the '\0' is added in for you.
+
+Overall Hints
+	define the size of the edit buffer with #define ROW 5 and #define COLUMNSIZE 81
+	If you use scanf in the program for any purpose,  add this line immediately after your call to scanf:  getchar();  That will remove the hardreturn from stdin.  If you get strange results and prompts skipped, it is likely because of hard returns on the input buffer.
+	Use fgets(stringArray, COLUMNSIZE, stdin) to get strings
+	fgets leaves the hard return on the string it scans in.  You can use the following function to remove the hard return if you wish.  You may copy this function.
+
+	void removeTrailingHardReturn(char line[])
+{
+	if(line[strlen(line)-1] == '\n')
+	{
+		line[strlen(line)-1] = '\0';
+	}
+}
+
+You may also use the following function to initialize the edit buffer if you wish, but you should change the function to contain different text.
+
+void initializeBuffer(char buf[ROWS][COLS])
+{
+	strcpy(buf[0],"tomorrow and yesterday and today" );
+	strcpy(buf[1],"tomorrow and yesterday and today" );
+	strcpy(buf[2],"tomorrow and yesterday and today" );
+	strcpy(buf[3],"tomorrow and yesterday and today" );
+	strcpy(buf[4],"tomorrow and yesterday and today" );
+}

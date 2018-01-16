@@ -1,0 +1,20 @@
+CC=gcc
+CFLAGS=-Wall -ansi
+
+main : main.o book.o boardgame.o store.o
+	$(CC) -o main main.o book.o boardgame.o store.o
+
+main.o : main.c book.h boardgame.h store.h
+	$(CC) $(CFLAGS) -c main.c
+
+book.o : book.c book.h
+	$(CC) $(CFLAGS) -c book.c
+
+boardgame.o : boardgame.c boardgame.h
+	$(CC) $(CFLAGS) -c boardgame.c
+
+store.o : store.c store.h
+	$(CC) $(CFLAGS) -c store.c
+
+clean :
+	rm main main.o book.o boardgame.o

@@ -1,0 +1,12 @@
+set autoindent
+set tabsize 4
+set mouse
+set suspend
+set nonewlines
+set noconvert
+set const
+unset backup
+include "/usr/share/nano/c.nanorc"
+include "/usr/share/nano/makefile.nanorc"
+include "/usr/share/nano/python.nanorc"
+include "/usr/share/nano/sh.nanorc"
